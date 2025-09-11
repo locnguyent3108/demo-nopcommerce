@@ -57,9 +57,13 @@ class RegisterPageObject {
     }
 
     async clickRegisterComplete() {
-        await this.page.getByRole('button', {name: 'Register'}).click()
+        await this.page.getByRole('link', {name: 'Continue'}).click()
     }
 
+    async verifyRegisterSuccess() {
+        const successRegisterTxt = this.page.getByText('Your registration completed')
+        await expect(successRegisterTxt).toBeVisible();
+    }
     async validateRequiredFields(): Promise<void> {
         await (this.validator
             .form({

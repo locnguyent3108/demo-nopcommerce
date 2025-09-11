@@ -1,1 +1,9 @@
 [X] init project
+[ ] using dynamic data
+[ ] implement Forgot password workflow  test case
+[ ] implement search product workflow
+[ ] implement explore product by category
+[ ] implement Run parallel locally
+[ ] implement generate report (html or Allure)
+[ ] implmenet capture artifacts (screenshots) when failuer)
+[ ] implement test environment configuration [stag, dev, prod)
