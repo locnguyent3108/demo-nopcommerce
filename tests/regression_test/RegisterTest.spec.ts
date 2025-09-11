@@ -30,5 +30,6 @@ test('test register success', async ({ registerPage }) => {
 test('test register missing required fields', async ({ registerPage }) => {
     await registerPage.goToRegisterPage();
     await registerPage.clickRegisterButton();
+    await registerPage.validateRequiredFields();
     // expect ()
 })

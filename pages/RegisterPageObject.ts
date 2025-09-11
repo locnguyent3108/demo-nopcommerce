@@ -1,9 +1,12 @@
 import { Page } from "@playwright/test";
 import { expect } from "@playwright/test";
+import ValidationHelpers from "../utils/ValidationHelpers";
 class RegisterPageObject {
     private page: Page;
+    private validator: ValidationHelpers;
     constructor(page: Page) {
         this.page = page;
+        this.validator = new ValidationHelpers(this.page)
         // construction locator
     }
 
@@ -52,6 +55,17 @@ class RegisterPageObject {
 
     async clickRegisterComplete() {
         await this.page.getByRole('button', {name: 'Register'}).click()
+    }
+    async validateRequiredFields(): Promise<void> {
+        await (await this.validator
+            .form({
+                    submitFieldLocator: '#register-button',
+                    url: '/register'
+                }
+            )
+            .requiredField('#FirstName', '#FirstName-error', 'First name is required.'))
+            .shouldBeRequired()
+
     }
 }
 export default RegisterPageObject;
