@@ -1,0 +1,32 @@
+{
+  "name": "demo-nopcommerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npx tsc --noEmit",
+    "test": "npx playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/locnguyent3108/demo-nopcommerce.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/locnguyent3108/demo-nopcommerce/issues"
+  },
+  "homepage": "https://github.com/locnguyent3108/demo-nopcommerce#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@playwright/test": "^1.55.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^24.3.1",
+    "eslint": "^9.35.0",
+    "globals": "^16.4.0",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.43.0"
+  }
+}
