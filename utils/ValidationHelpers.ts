@@ -8,7 +8,6 @@ export interface FieldConfig {
 
 export interface FormConfig {
     submitFieldLocator: string,
-    url: string
 }
 
 export class ValidationHelpers {
@@ -26,7 +25,7 @@ export class ValidationHelpers {
         return this
     }
 
-    async requiredField(fieldLocator: string, errorLocator: string, errorMessage: string): Promise<ValidationHelpers>{
+    requiredField(fieldLocator: string, errorLocator: string, errorMessage: string): ValidationHelpers{
         this.fieldConfig.push({
             fieldLocator,
             errorLocator,
@@ -35,14 +34,22 @@ export class ValidationHelpers {
         return this
     }
 
+    async shouldBeInvalid() {
+        if(!this.fieldConfig) {
+            throw new Error('Field Configuration is required. Call .requiredField() first!')
+        }
+
+        for(const field of this.fieldConfig) {
+            const errorLocator = this.page.locator((field.errorLocator))
+            await expect(errorLocator).toBeVisible()
+            await expect(errorLocator).toHaveText(field.errorMessage)
+        }
+    }
     async shouldBeRequired() {
         if(!this.formConfig) {
             throw new Error('Form configuration is required. Call .form() first!');
         }
 
-        if(this.formConfig.url) {
-            await this.page.goto(this.formConfig.url)
-        }
 
         //submit empty form
         await this.page.click(this.formConfig.submitFieldLocator)
@@ -57,6 +64,7 @@ export class ValidationHelpers {
             await expect(errorLocator).toHaveText(field.errorMessage)
         }
     }
+    //
 }
 
 export default ValidationHelpers

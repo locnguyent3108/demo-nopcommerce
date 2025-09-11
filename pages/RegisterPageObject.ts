@@ -30,7 +30,10 @@ class RegisterPageObject {
     }
 
     async enterEmail(email: string) {
-        await this.page.getByRole('textbox', {name: 'Email:'}).fill(email);
+
+        const emailField =  this.page.getByRole('textbox', {name: 'Email:'})
+        await emailField.click();
+        await emailField.fill(email)
     }
 
     async enterCompanyName(companyName: string) {
@@ -46,7 +49,7 @@ class RegisterPageObject {
     }
 
     async clickRegisterButton() {
-        await this.page.getByRole('button', {name: 'Register'}).click();
+        await this.page.getByRole('button', {name: 'Register'}).click({force: true});
     }
 
     async goToRegisterPage() {
@@ -56,16 +59,22 @@ class RegisterPageObject {
     async clickRegisterComplete() {
         await this.page.getByRole('button', {name: 'Register'}).click()
     }
+
     async validateRequiredFields(): Promise<void> {
-        await (await this.validator
+        await (this.validator
             .form({
-                    submitFieldLocator: '#register-button',
-                    url: '/register'
+                    submitFieldLocator: '#register-button'
                 }
             )
             .requiredField('#FirstName', '#FirstName-error', 'First name is required.'))
             .shouldBeRequired()
+    }
 
+    async validateInvalidFields(): Promise<void> {
+        await this.validator
+            .requiredField('#Email', '#Email-error', 'Please enter a valid email address.')
+            .requiredField('#ConfirmPassword','#ConfirmPassword-error', 'The password and confirmation password do not match.')
+            .shouldBeInvalid()
     }
 }
 export default RegisterPageObject;
