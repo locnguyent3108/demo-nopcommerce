@@ -15,10 +15,6 @@ test('Search product with partial keyword', async ({homePage}) => {
         .isSuggestionItemDisplayed()
 })
 
-test('Search product with speical character keyword', async ({}) => {
-
-})
-
 test('Search product with partial keyword', async ({}) => {
 
 })
