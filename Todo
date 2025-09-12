@@ -1,7 +1,8 @@
 [X] init project
 [ ] using dynamic data
 [ ] implement Forgot password workflow  test case
-[ ] implement search product workflow
+    [ ] implement register by API
+[x] implement search product workflow
 [ ] implement explore product by category
 [ ] implement Run parallel locally
 [ ] implement generate report (html or Allure)
