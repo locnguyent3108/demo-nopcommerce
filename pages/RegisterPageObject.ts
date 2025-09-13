@@ -33,7 +33,7 @@ class RegisterPageObject {
 
         const emailField =  this.page.getByRole('textbox', {name: 'Email:'})
         await emailField.click();
-        await emailField.fill(email)
+        await emailField.pressSequentially(email, {delay: 100})
     }
 
     async enterCompanyName(companyName: string) {
