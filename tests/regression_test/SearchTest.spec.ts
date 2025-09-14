@@ -18,4 +18,11 @@ test.describe('Search component', async ()=> {
             .searchComponent
             .isSuggestionItemDisplayed()
     })
+
+    test('Search product with invalid keyword', async ({homePage}) => {
+        await homePage.searchComponent
+            .searchWithKeyword('#!@%$!abc')
+        await homePage.clickSearchBtn()
+        await homePage.searchComponent.isSearchProductNotExists()
+    })
 })

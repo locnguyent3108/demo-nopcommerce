@@ -3,7 +3,7 @@
 [ ] implement Forgot password workflow  test case
     [ ] implement register by API
 [x] implement search product workflow
-[ ] implement explore product by category
+[X] implement explore product by category
 [ ] implement Run parallel locally
 [ ] implement generate report (html or Allure)
 [ ] implmenet capture artifacts (screenshots) when failuer)
