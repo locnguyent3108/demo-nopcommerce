@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+    
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -24,7 +28,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run Playwright tests
-      run: npx playwright test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      run: npx playwright test --reporter=blob --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
     - name: Upload report to github actions artifacts
       if: ${{ !cancelled() }}
@@ -35,7 +39,7 @@ jobs:
         retention-days: 1
 
   merge-reports:
-    if: ${{ !cancelled() }}
+    if: ${{ always() }}
     needs: [ test ]
 
     runs-on: ubuntu-latest
