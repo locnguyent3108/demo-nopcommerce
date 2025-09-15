@@ -28,5 +28,10 @@
     "globals": "^16.4.0",
     "typescript": "^5.5.4",
     "typescript-eslint": "^8.43.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "lodash": "^4.17.21",
+    "mailosaur": "^8.8.1"
   }
 }

@@ -18,6 +18,12 @@ class ProductDetails {
         return this
     }
 
+    async emptyPageShouldDisplay() {
+        const emptyProduct = this.page.locator('.no-result')
+        await expect(emptyProduct).toBeVisible()
+        const noProductTxt = await emptyProduct.innerText()
+        expect(noProductTxt).toEqual('No products were found that matched your criteria.')
+    }
     async isAllItemDetailsShouldNotBroken(): Promise<ProductDetails> {
         const productItems = await this.page.locator('.product-item').all()
 
@@ -48,23 +54,43 @@ class ProductDetails {
         return this
     }
 
+    async productDetailsShouldDisplay() {
+        expect(this.page.locator('.product-name').textContent()).not.toBeNull()
+        expect(this.page.locator('.product-price').innerText()).not.toBeNull()
+        await expect(this.page.locator('.button-1.add-to-cart-button')).toBeVisible()
+    }
+
+    async sortByPrice() {
+        await this.page.waitForLoadState('networkidle')
+        await this.page.getByRole('combobox', {name: 'Select product sort order'})
+            .selectOption({label: 'Price: Low to High'});
+    }
+
+    async selectManufacture(manufactureName: string) {
+        await this.page.waitForLoadState('networkidle')
+        await this.page.getByRole('link', {name: manufactureName}).click()
+    }
+
+    async filterByPriceViaUrl(productName: string, from: number, to: number) {
+        await this.page.goto(`/${productName}?price=${from}-${to}`)
+        await this.page.waitForLoadState('networkidle')
+    }
+
+    async verifyProductOrderByPriceFromLowToHigh() {
+        await this.page.waitForLoadState('networkidle')
+        const pricesTxt = await this.page.locator('.price.actual-price').allInnerTexts();
+        const prices = pricesTxt.map(text => {
+                const match = text.match(/[\d,.]+/);
+                return match ? parseFloat(match[0].replace(',', '')) : NaN;
+            })
+            .filter(price => !isNaN(price));
+        console.log(prices)
+        for (let i = 0; i < prices.length - 1; i++) {
+            expect(prices[i]).toBeLessThanOrEqual(prices[i + 1]);
+        }
+    }
 
 }
-
-
-
-
-
-    /* each category have different filter
-    * This method will setup filter category base on
-    * @param selectedProduct
-    * */
-    // async filterByCategory(selectedProduct: string) {
-    //     const productName = selectedProduct
-    //     switch (selectedProduct) {
-    //         if selct
-    //     }
-    // }
 
 
 export default ProductDetails

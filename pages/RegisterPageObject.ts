@@ -66,10 +66,7 @@ class RegisterPageObject {
     }
     async validateRequiredFields(): Promise<void> {
         await (this.validator
-            .form({
-                    submitFieldLocator: '#register-button'
-                }
-            )
+            .form({submitFieldLocator: '#register-button'})
             .requiredField('#FirstName', '#FirstName-error', 'First name is required.'))
             .shouldBeRequired()
     }

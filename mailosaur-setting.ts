@@ -1,0 +1,2 @@
+import MailosaurClient from "mailosaur"
+

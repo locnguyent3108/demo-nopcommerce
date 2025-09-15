@@ -6,4 +6,6 @@ export type productType = {
 export type user = {
     firstName: string,
     lastName: string,
+    email: string,
+    password: string,
 }
