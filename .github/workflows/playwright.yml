@@ -36,7 +36,7 @@ jobs:
 
   merge-reports:
     if: ${{ !cancelled() }}
-    needs: [ tests ]
+    needs: [ test ]
 
     runs-on: ubuntu-latest
     steps:
