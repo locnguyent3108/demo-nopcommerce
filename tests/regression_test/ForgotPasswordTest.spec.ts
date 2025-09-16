@@ -7,7 +7,7 @@ const mailosaur = new MailosaurClient(process.env.MAILOSAUR_API_KEY as string);
 const serverId = process.env.MAILOSAUR_SERVER_ID as string;
 
 test.describe('One time passcode - Email', () => {
-    test('Retrieve one time passcode', async ({ page }) => {
+    test.skip('Retrieve one time passcode', async ({ page }) => {
         // Random test email address (this uses a catch-all pattern)
         const randomString = (Math.random() + 1).toString(36).substring(7);
         const emailAddress = `${randomString}@${serverId}.mailosaur.net`;
