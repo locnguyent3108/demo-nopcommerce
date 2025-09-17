@@ -1,4 +1,4 @@
-import { test } from "../../data/fixtures/pageFixture";
+import { test } from "../../data/fixtures/mergeFixture";
 import { product } from "../../pages/common/ProductMenu";
 import { productType } from "../../types/type";
 import homePageObject from "../../pages/HomePageObject";
@@ -40,13 +40,13 @@ test.describe('ExploreProduct flow', async () => {
     })
 
     for (const manuItem of ['Apple', 'HP']) {
-        test(`Filter by manufacture:  ${manuItem}`, async ({ homePage, productDetails }) => {
+        test(`Filter by manufacture:  ${manuItem} @component`, async ({ homePage, productDetails }) => {
             const specificProduct = await homePage.selectProductFromHeader(productToExplore)
             await productDetails.selectManufacture('Apple')
             await productDetails.isProductPageDisplay('Apple')
         })
     }
-    test(`Filter by price`, async ({ page, homePage, productDetails }) => {
+    test(`Filter by price @component`, async ({ page, homePage, productDetails }) => {
         const productToTest = 'desktops'
         await page.goto(productToTest)
         await productDetails.filterByPriceViaUrl(productToTest, 9000, 9500)

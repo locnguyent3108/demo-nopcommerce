@@ -21,6 +21,7 @@
   "homepage": "https://github.com/locnguyent3108/demo-nopcommerce#readme",
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.55.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^24.3.1",
@@ -31,6 +32,7 @@
   },
   "dependencies": {
     "dotenv": "^17.2.2",
+    "faker": "^6.6.6",
     "lodash": "^4.17.21",
     "mailosaur": "^8.8.1"
   }

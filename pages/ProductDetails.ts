@@ -61,9 +61,10 @@ class ProductDetails {
     }
 
     async sortByPrice() {
-        await this.page.waitForLoadState('networkidle')
         await this.page.getByRole('combobox', {name: 'Select product sort order'})
             .selectOption({label: 'Price: Low to High'});
+        // await expect(this.page.locator('.ajax-products-busy')).not.toBeVisible()
+        await this.page.waitForSelector('.ajax-products-busy', {state: 'hidden'})
     }
 
     async selectManufacture(manufactureName: string) {

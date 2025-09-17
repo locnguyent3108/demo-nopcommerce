@@ -11,6 +11,20 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+const env = process.env.ENV || 'dev'
+const config = {
+  local: {
+    baseUrl: `https://demo.nopcommerce.com`
+  },
+  dev: {
+    baseUrl: `https://demo.nopcommerce.com`
+  },
+  staging: {
+    baseUrl: `https://demo.nopcommerce.com`
+  }
+};
+const url = config.local ? config[env as keyof typeof config] : 'dev';
+
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -25,41 +39,24 @@ export default defineConfig({
   reporter: process.env.CI ? 'blob' : 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    headless: true,
+    screenshot: 'on-first-failure', // support fix flaky test later
+    video: 'retain-on-failure',
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'https://demo.nopcommerce.com',
-
+    baseURL: `${url}`,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {...devices['Desktop Chrome']},
     },
-
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
+
 
   /* Run your local dev server before starting the tests */
   // webServer: {

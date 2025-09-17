@@ -9,7 +9,7 @@ type pageObject = {
     productDetails: ProductDetails
 }
 
-export const test = base.extend<pageObject>({
+export const test1 = base.extend<pageObject>({
     registerPage: async ({ page }, use) => {
         await use(new RegisterPageObject(page))
     },
@@ -20,3 +20,5 @@ export const test = base.extend<pageObject>({
         await use(new ProductDetails(page))
     },
 })
+
+export const expect = test1.expect
