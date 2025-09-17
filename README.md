@@ -10,43 +10,34 @@
 2. Install Playwright browsers:
    - `npx playwright install`
    - (Linux/macOS only, if needed): `npx playwright install-deps`
-3. Optional: Configure environment variables (for email-related tests using Mailosaur):
-   - Create a `.env` file in the project root with:
-     - `MAILOSAUR_API_KEY=your_api_key`
-     - `MAILOSAUR_SERVER_ID=your_server_id`
-   - On Windows PowerShell (one session):
-     - `$env:MAILOSAUR_API_KEY="your_api_key"`
-     - `$env:MAILOSAUR_SERVER_ID="your_server_id"`
 
 ## Test execution
 
 ### Quick start
-- Run all tests (default environment: `local`):
-  - `npm test`
+- Run all tests in local machine:
+  - `npm run test-local`
 
 ### Environment-specific tests
 - Run tests with dev environment:
   - `npm run test-dev`
-- Run tests with local environment:
-  - `npm run test-local`
 - Run tests with staging environment:
   - `npm run test-staging`
 
 ### Advanced test options
-- Run in headed mode:
+- Run in  UI mode:
+  - `npm run test-ui`
+
+- Run in head mode (explore and debug):
   - `npx playwright test --headed`
 
-- Run in UI mode (explore and debug):
-  - `npx playwright test --ui`
-
 - Run a specific file:
-  - `npx playwright test tests/regression_test/RegisterTest.spec.ts`
-
+  - `npx playwright test <file to test>`
+  
+  or you can view the guidance video 
+  
 - Run tests by title/grep:
-  - `npx playwright test -g "register success"`
-
-- Increase workers locally (override config):
-  - `npx playwright test --workers=4`
+  - `npx playwright test -g <test name>`
+  e.g: `npx playwright test -g <test name>`
 
 - Open the latest HTML report:
   - `npx playwright show-report`
@@ -61,7 +52,7 @@ The project supports multiple environments with different base URLs:
 - Use npm scripts (recommended):
   - `npm run test-dev` - runs with dev environment
   - `npm run test-local` - runs with local environment  
-  - `npm run test-staging` - runs with staging environment
+  - `npm run test-prod` - runs with staging environment
 
 - Manual environment variable (alternative):
   - Windows PowerShell: `$env:ENV="dev"; npm test`

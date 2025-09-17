@@ -3,14 +3,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 const ENV = process.env.ENV || 'local';
-dotenv.config({ path: `.env.${process.env.ENV}` })
-// const environments = {
-//   local: { baseURL: 'https://demo.nopcommerce.com' },
-//   dev: { baseURL: 'https://demo.nopcommerce.com' },
-//   staging: { baseURL: 'https://demo.nopcommerce.com' },
-// } as const;
+dotenv.config({ path: `.env.${ENV}` })
 
-// const selectedEnv = (environments as Record<string, { baseURL: string }>)[ENV] || environments.local;
 console.log(`[Playwright] ENV=${ENV}`);
 
 export default defineConfig({

@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npx tsc --noEmit",
-    "test": "npx playwright test",
+    "test-ui": "npx playwright test --ui",
+    "debug": "npx playwright test --debug",
     "test-dev": "cross-env ENV=dev npx playwright test",
     "test-local": "cross-env ENV=local npx playwright test",
-    "test-staging": "cross-env ENV=staging npx playwright test"
+    "test-prod": "cross-env ENV=prod npx playwright test"
   },
   "repository": {
     "type": "git",
