@@ -30,15 +30,6 @@
 - Run in head mode (explore and debug):
   - `npx playwright test --headed`
 
-- Run a specific file:
-  - `npx playwright test <file to test>`
-  
-  or you can view the guidance video 
-  
-- Run tests by title/grep:
-  - `npx playwright test -g <test name>`
-  e.g: `npx playwright test -g <test name>`
-
 - Open the latest HTML report:
   - `npx playwright show-report`
 
