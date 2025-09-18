@@ -1,10 +1,10 @@
 [X] init project
 [-] implement Forgot password workflow  test case
 [x] Dynamic builder User Data (include email)
-[ ] Email helper
+[X] Email helper
 [x] implement search product workflow
 [X] implement explore product by category
 [X] implement Run parallel locally
 [X] implement generate report (html or Allure)
 [X] implmenet capture artifacts (screenshots) when failuer)
-[ ] implement test environment configuration [stag, dev, prod)
+[X] implement test environment configuration [stag, dev, prod)
