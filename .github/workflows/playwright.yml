@@ -128,11 +128,16 @@ jobs:
           path: all-blob-reports
           pattern: blob-report-*
           merge-multiple: true
-
+      - name: List downloaded reports
+        run: ls -R all-blob-reports
+      - name: convert blob report to json
+        run: |
+          npx playwright show-report all-blob-reports --reporter=json > summary.json
+          ls -lh summary.jsom
       - name: Parse Playwright result
         id: result
         run: |
-          fails=$(jq -r '.. | objects | select(.results? and (.results[].status=="failed")) | .title' all-blob-reports/*.json)
+          fails=$(jq -r '.. | objects | select(.results? and (.results[].status=="failed")) | .title' summary.jsom)
           count=$(echo "$fails" | grep -c . || true)
 
           if [ "$count" -eq 0 ]; then
