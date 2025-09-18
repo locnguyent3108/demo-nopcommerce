@@ -109,7 +109,15 @@ jobs:
 
       - name: Merge into HTML Report
         run: npx playwright merge-reports --reporter json ./all-blob-reports > summary.json
+      - name: Upload Json Summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: summary-json
+          path: summary.json
+          retention-days: 1
 
+      - name: Merge into HTML Report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         with:
@@ -125,26 +133,19 @@ jobs:
       - name: download all blob report
         uses: actions/download-artifact@v4
         with:
-          path: all-blob-reports
-          pattern: blob-report-*
-          merge-multiple: true
-      - name: List downloaded reports
-        run: ls -R all-blob-reports
-      - name: convert blob report to json
-        run: |
-          npx playwright show-report all-blob-reports --reporter=json > summary.json
-          ls -lh summary.jsom
+          name: summary-json
+          path: .
       - name: Parse Playwright result
         id: result
         run: |
-          fails=$(jq -r '.. | objects | select(.results? and (.results[].status=="failed")) | .title' summary.jsom)
+          fails=$(jq -r '.. | objects | select(.results? and (.results[].status=="failed")) | .title' summary.json)
           count=$(echo "$fails" | grep -c . || true)
 
           if [ "$count" -eq 0 ]; then
             echo "summary=TEST PASSED ALL" >> $GITHUB_OUTPUT
           else
             fails_formatted=$(echo "$fails" | sed ':a;N;$!ba;s/\n/\\n/g')
-            echo "summary=Failed: $count tests%n$fails_formatted" >> $GITHUB_OUTPUT
+            echo "summary=Failed: $count tests\n$fails_formatted" >> $GITHUB_OUTPUT
           fi
 
       - name: Send summary to Slack
@@ -154,7 +155,7 @@ jobs:
             {
               "attachments": [
                 {
-                  "color": "${{ steps.result.outputs.summary == 'TEST PASSED ALL' && '#36a64f' || '#ff0000' }}",
+                  "color": "${{ steps.result.outputs.summary == 'TEST PASSED ALL' && '#36a64f' || '#ff0000' }}"
                   "text": "${{ steps.result.outputs.summary }}"
                 }
               ]
