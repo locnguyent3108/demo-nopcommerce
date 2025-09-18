@@ -122,22 +122,24 @@ jobs:
     needs: [ merge-reports ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - name: download all blob report
+        uses: actions/download-artifact@v4
         with:
-          name: blob-report-1
-          path: blob-report
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
 
       - name: Parse Playwright result
         id: result
         run: |
-          fails=$(jq -r '.suites[].specs[].tests[] | select(.results[].status=="failed") | .title' blob-report/*.json)
+          fails=$(jq -r '.. | objects | select(.results? and (.results[].status=="failed")) | .title' all-blob-reports/*.json)
           count=$(echo "$fails" | grep -c . || true)
 
           if [ "$count" -eq 0 ]; then
             echo "summary=TEST PASSED ALL" >> $GITHUB_OUTPUT
           else
             fails_formatted=$(echo "$fails" | sed ':a;N;$!ba;s/\n/\\n/g')
-            echo "summary=Failed: $count tests\\n$fails_formatted" >> $GITHUB_OUTPUT
+            echo "summary=Failed: $count tests%n$fails_formatted" >> $GITHUB_OUTPUT
           fi
 
       - name: Send summary to Slack
@@ -145,7 +147,12 @@ jobs:
         with:
           payload: |
             {
-              "text": "${{ steps.result.outputs.summary }}"
+              "attachments": [
+                {
+                  "color": "${{ steps.result.outputs.summary == 'TEST PASSED ALL' && '#36a64f' || '#ff0000' }}",
+                  "text": "${{ steps.result.outputs.summary }}"
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
