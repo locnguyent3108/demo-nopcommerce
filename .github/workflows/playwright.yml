@@ -119,18 +119,33 @@ jobs:
 
   send-slack-notification:
     if: ${{ always() }}
-    needs: [ merge-report ]
+    needs: [ merge-reports ]
     runs-on: ubuntu-latest
     steps:
-      - name: Send Slack notification
-        uses: slackapi/slack-github-action@v2.1.1
+      - uses: actions/download-artifact@v4
         with:
-          webhook: ${{ secrets.SLACK_WEBHOOK }}
-          webhook-type: incoming-webhook
+          name: blob-report-1
+          path: blob-report
+
+      - name: Parse Playwright result
+        id: result
+        run: |
+          fails=$(jq -r '.suites[].specs[].tests[] | select(.results[].status=="failed") | .title' blob-report/*.json)
+          count=$(echo "$fails" | grep -c . || true)
+
+          if [ "$count" -eq 0 ]; then
+            echo "summary=TEST PASSED ALL" >> $GITHUB_OUTPUT
+          else
+            fails_formatted=$(echo "$fails" | sed ':a;N;$!ba;s/\n/\\n/g')
+            echo "summary=Failed: $count tests\\n$fails_formatted" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send summary to Slack
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
           payload: |
-            text: "*GitHub Action build result*: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            {
+              "text": "${{ steps.result.outputs.summary }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
