@@ -116,3 +116,16 @@ jobs:
           name: html-report--attempt-${{ github.run_attempt }}
           path: playwright-report
           retention-days: 14
+
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "*GitHub Action build result*: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
