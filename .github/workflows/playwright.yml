@@ -173,11 +173,16 @@ jobs:
           #   exit 1
           # fi
           
-          # Parse failed tests and count total specs
+          # Parse failed tests and get counts from stats
           fails=$(jq -r '.suites[].suites[].specs[] | select(.ok == false) | .title' summary.json 2>/dev/null || echo "")
           failed_count=$(echo "$fails" | grep -c . || true)
-          total_count=$(jq -r '.suites[].suites[].specs[] | .title' summary.json 2>/dev/null | grep -c . || true)
-          echo "Found $failed_count failed tests out of $total_count total tests"
+          
+          # Get total counts from stats section
+          expected_count=$(jq -r '.stats.expected' summary.json 2>/dev/null || echo "0")
+          unexpected_count=$(jq -r '.stats.unexpected' summary.json 2>/dev/null || echo "0")
+          total_count=$((expected_count + unexpected_count))
+          
+          echo "Found $failed_count failed tests out of $total_count total tests (Expected: $expected_count, Unexpected: $unexpected_count)"
 
           if [ "$failed_count" -eq 0 ]; then
             echo "summary=TEST PASSED ALL ($total_count/$total_count)" >> $GITHUB_OUTPUT
