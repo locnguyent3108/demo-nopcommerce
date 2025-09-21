@@ -138,8 +138,10 @@ jobs:
       - name: Parse Playwright result
         id: result
         run: |
-          fails=$(jq -r '.suites[].suites[].specs[] | select(.ok == "false") | .title' summary.json)
+          # Parse failed tests from the correct JSON structure
+          fails=$(jq -r '.suites[].suites[].specs[] | select(.ok == false) | .title' summary.json)
           count=$(echo "$fails" | grep -c . || true)
+          echo "Found $count failed tests"
 
           if [ "$count" -eq 0 ]; then
             echo "summary=TEST PASSED ALL" >> $GITHUB_OUTPUT
