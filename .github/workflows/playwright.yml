@@ -138,7 +138,7 @@ jobs:
       - name: Parse Playwright result
         id: result
         run: |
-          fails=$(jq -r '.. | objects | select(.results? and (.results[].status=="failed")) | .title != null' summary.json)
+          fails=$(jq -r '.suites[].suites[].specs[] | select(.ok == "false") | .title' summary.json)
           count=$(echo "$fails" | grep -c . || true)
 
           if [ "$count" -eq 0 ]; then
