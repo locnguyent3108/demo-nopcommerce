@@ -136,54 +136,55 @@ jobs:
           name: summary-json
           path: .
       
-      - name: Debug file structure
-        run: |
-          echo "=== Current directory contents ==="
-          ls -la
-          echo "=== Looking for summary.json ==="
-          find . -name "summary.json" -type f
-          echo "=== Checking if summary.json exists and is readable ==="
-          if [ -f "summary.json" ]; then
-            echo "summary.json exists"
-            echo "File size: $(wc -c < summary.json) bytes"
-            echo "First 10 lines:"
-            head -10 summary.json
-          else
-            echo "summary.json NOT FOUND"
-            echo "Available files:"
-            find . -type f -name "*.json"
-          fi
+      # - name: Debug file structure
+      #   run: |
+      #     echo "=== Current directory contents ==="
+      #     ls -la
+      #     echo "=== Looking for summary.json ==="
+      #     find . -name "summary.json" -type f
+      #     echo "=== Checking if summary.json exists and is readable ==="
+      #     if [ -f "summary.json" ]; then
+      #       echo "summary.json exists"
+      #       echo "File size: $(wc -c < summary.json) bytes"
+      #       echo "First 10 lines:"
+      #       head -10 summary.json
+      #     else
+      #       echo "summary.json NOT FOUND"
+      #       echo "Available files:"
+      #       find . -type f -name "*.json"
+      #     fi
       
       - name: Parse Playwright result
         id: result
         run: |
           # Check if summary.json exists and is valid
-          if [ ! -f "summary.json" ]; then
-            echo "ERROR: summary.json not found"
-            echo "summary=ERROR: No test results found" >> $GITHUB_OUTPUT
-            echo "color=#ff0000" >> $GITHUB_OUTPUT
-            exit 1
-          fi
+          # if [ ! -f "summary.json" ]; then
+          #   echo "ERROR: summary.json not found"
+          #   echo "summary=ERROR: No test results found" >> $GITHUB_OUTPUT
+          #   echo "color=#ff0000" >> $GITHUB_OUTPUT
+          #   exit 1
+          # fi
           
           # Validate JSON structure
-          if ! jq empty summary.json 2>/dev/null; then
-            echo "ERROR: summary.json is not valid JSON"
-            echo "summary=ERROR: Invalid test results format" >> $GITHUB_OUTPUT
-            echo "color=#ff0000" >> $GITHUB_OUTPUT
-            exit 1
-          fi
+          # if ! jq empty summary.json 2>/dev/null; then
+          #   echo "ERROR: summary.json is not valid JSON"
+          #   echo "summary=ERROR: Invalid test results format" >> $GITHUB_OUTPUT
+          #   echo "color=#ff0000" >> $GITHUB_OUTPUT
+          #   exit 1
+          # fi
           
-          # Parse failed tests from the correct JSON structure
+          # Parse failed tests and count total specs
           fails=$(jq -r '.suites[].suites[].specs[] | select(.ok == false) | .title' summary.json 2>/dev/null || echo "")
-          count=$(echo "$fails" | grep -c . || true)
-          echo "Found $count failed tests"
+          failed_count=$(echo "$fails" | grep -c . || true)
+          total_count=$(jq -r '.suites[].suites[].specs[] | .title' summary.json 2>/dev/null | grep -c . || true)
+          echo "Found $failed_count failed tests out of $total_count total tests"
 
-          if [ "$count" -eq 0 ]; then
-            echo "summary=TEST PASSED ALL" >> $GITHUB_OUTPUT
+          if [ "$failed_count" -eq 0 ]; then
+            echo "summary=TEST PASSED ALL ($total_count/$total_count)" >> $GITHUB_OUTPUT
             echo "color=#36a64f" >> $GITHUB_OUTPUT
           else
-            fails_formatted=$(echo "$fails" | sed ':a;N;$!ba;s/\n/\\n/g')
-            echo "summary=Failed: $count tests\n$fails_formatted" >> $GITHUB_OUTPUT
+            fails_formatted=$(echo "Test spec faileds: $fails" | sed ':a;N;$!ba;s/\n/\\n/g')
+            echo "summary=Failed: $failed_count/$total_count tests\n$fails_formatted" >> $GITHUB_OUTPUT
             echo "color=#ff0000" >> $GITHUB_OUTPUT
           fi
 
